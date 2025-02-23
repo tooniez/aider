@@ -8,26 +8,19 @@ from .wholefile_prompts import WholeFilePrompts
 
 
 class WholeFileCoder(Coder):
-    def __init__(self, *args, **kwargs):
-        self.gpt_prompts = WholeFilePrompts()
-        super().__init__(*args, **kwargs)
+    """A coder that operates on entire files for code modifications."""
 
-    def update_cur_messages(self, edited):
-        if edited:
-            self.cur_messages += [
-                dict(role="assistant", content=self.gpt_prompts.redacted_edit_message)
-            ]
-        else:
-            self.cur_messages += [dict(role="assistant", content=self.partial_response_content)]
+    edit_format = "whole"
+    gpt_prompts = WholeFilePrompts()
 
     def render_incremental_response(self, final):
         try:
             return self.get_edits(mode="diff")
         except ValueError:
-            return self.partial_response_content
+            return self.get_multi_response_content_in_progress()
 
     def get_edits(self, mode="update"):
-        content = self.partial_response_content
+        content = self.get_multi_response_content_in_progress()
 
         chat_files = self.get_inchat_relative_files()
 
@@ -63,6 +56,14 @@ class WholeFileCoder(Coder):
                     fname_source = "block"
                     fname = lines[i - 1].strip()
                     fname = fname.strip("*")  # handle **filename.py**
+                    fname = fname.rstrip(":")
+                    fname = fname.strip("`")
+                    fname = fname.lstrip("#")
+                    fname = fname.strip()
+
+                    # Issue #1232
+                    if len(fname) > 250:
+                        fname = ""
 
                     # Did gpt prepend a bogus dir? It especially likes to
                     # include the path/to prefix from the one-shot example in
@@ -128,15 +129,16 @@ class WholeFileCoder(Coder):
 
     def do_live_diff(self, full_path, new_lines, final):
         if Path(full_path).exists():
-            orig_lines = self.io.read_text(full_path).splitlines(keepends=True)
+            orig_lines = self.io.read_text(full_path)
+            if orig_lines is not None:
+                orig_lines = orig_lines.splitlines(keepends=True)
 
-            show_diff = diffs.diff_partial_update(
-                orig_lines,
-                new_lines,
-                final=final,
-            ).splitlines()
-            output = show_diff
-        else:
-            output = ["```"] + new_lines + ["```"]
+                show_diff = diffs.diff_partial_update(
+                    orig_lines,
+                    new_lines,
+                    final=final,
+                ).splitlines()
+                return show_diff
 
+        output = ["```"] + new_lines + ["```"]
         return output

@@ -1,82 +1,61 @@
-import hashlib
-import json
-
-import backoff
-import openai
-import requests
-
-# from diskcache import Cache
-from openai.error import (
-    APIConnectionError,
-    APIError,
-    RateLimitError,
-    ServiceUnavailableError,
-    Timeout,
-)
-
-CACHE_PATH = "~/.aider.send.cache.v1"
-CACHE = None
-# CACHE = Cache(CACHE_PATH)
+from aider.dump import dump  # noqa: F401
+from aider.utils import format_messages
 
 
-@backoff.on_exception(
-    backoff.expo,
-    (
-        Timeout,
-        APIError,
-        ServiceUnavailableError,
-        RateLimitError,
-        APIConnectionError,
-        requests.exceptions.ConnectionError,
-    ),
-    max_tries=10,
-    on_backoff=lambda details: print(
-        f"{details.get('exception','Exception')}\nRetry in {details['wait']:.1f} seconds."
-    ),
-)
-def send_with_retries(model_name, messages, functions, stream):
-    kwargs = dict(
-        model=model_name,
-        messages=messages,
-        temperature=0,
-        stream=stream,
-    )
-    if functions is not None:
-        kwargs["functions"] = functions
+def sanity_check_messages(messages):
+    """Check if messages alternate between user and assistant roles.
+    System messages can be interspersed anywhere.
+    Also verifies the last non-system message is from the user.
+    Returns True if valid, False otherwise."""
+    last_role = None
+    last_non_system_role = None
 
-    # we are abusing the openai object to stash these values
-    if hasattr(openai, "api_deployment_id"):
-        kwargs["deployment_id"] = openai.api_deployment_id
-    if hasattr(openai, "api_engine"):
-        kwargs["engine"] = openai.api_engine
+    for msg in messages:
+        role = msg.get("role")
+        if role == "system":
+            continue
 
-    if "openrouter.ai" in openai.api_base:
-        kwargs["headers"] = {"HTTP-Referer": "http://aider.chat", "X-Title": "Aider"}
+        if last_role and role == last_role:
+            turns = format_messages(messages)
+            raise ValueError("Messages don't properly alternate user/assistant:\n\n" + turns)
 
-    key = json.dumps(kwargs, sort_keys=True).encode()
+        last_role = role
+        last_non_system_role = role
 
-    # Generate SHA1 hash of kwargs and append it to chat_completion_call_hashes
-    hash_object = hashlib.sha1(key)
-
-    if not stream and CACHE is not None and key in CACHE:
-        return hash_object, CACHE[key]
-
-    res = openai.ChatCompletion.create(**kwargs)
-
-    if not stream and CACHE is not None:
-        CACHE[key] = res
-
-    return hash_object, res
+    # Ensure last non-system message is from user
+    return last_non_system_role == "user"
 
 
-def simple_send_with_retries(model_name, messages):
-    try:
-        _hash, response = send_with_retries(
-            model_name=model_name,
-            messages=messages,
-            functions=None,
-            stream=False,
-        )
-        return response.choices[0].message.content
-    except (AttributeError, openai.error.InvalidRequestError):
-        return
+def ensure_alternating_roles(messages):
+    """Ensure messages alternate between 'assistant' and 'user' roles.
+
+    Inserts empty messages of the opposite role when consecutive messages
+    of the same role are found.
+
+    Args:
+        messages: List of message dictionaries with 'role' and 'content' keys.
+
+    Returns:
+        List of messages with alternating roles.
+    """
+    if not messages:
+        return messages
+
+    fixed_messages = []
+    prev_role = None
+
+    for msg in messages:
+        current_role = msg.get("role")  # Get 'role', None if missing
+
+        # If current role same as previous, insert empty message
+        # of the opposite role
+        if current_role == prev_role:
+            if current_role == "user":
+                fixed_messages.append({"role": "assistant", "content": ""})
+            else:
+                fixed_messages.append({"role": "user", "content": ""})
+
+        fixed_messages.append(msg)
+        prev_role = current_role
+
+    return fixed_messages
