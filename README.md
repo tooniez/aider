@@ -30,150 +30,184 @@ Aider is unique in that it [works well with pre-existing, larger codebases](http
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/Tv2uQnR88V">
-    <img src="https://img.shields.io/badge/Join-Discord-blue.svg"/>
-  </a>
+    <a href="https://aider.chat/"><img src="https://aider.chat/assets/logo.svg" alt="Aider Logo" width="300"></a>
 </p>
 
-- [Getting started](#getting-started)
-- [Example chat transcripts](#example-chat-transcripts)
-- [Features](#features)
-- [Usage](#usage)
-- [In-chat commands](#in-chat-commands)
-- [Tips](#tips)
-- [GPT-4 vs GPT-3.5](https://aider.chat/docs/faq.html#gpt-4-vs-gpt-35)
-- [Installation](https://aider.chat/docs/install.html)
-- [Voice-to-code](https://aider.chat/docs/voice.html)
-- [FAQ](https://aider.chat/docs/faq.html)
-- [Discord](https://discord.gg/Tv2uQnR88V)
+<h1 align="center">
+AI Pair Programming in Your Terminal
+</h1>
 
-## Getting started
 
-See the
-[installation instructions](https://aider.chat/docs/install.html)
-for more details, but you can
-get started quickly like this:
+<p align="center">
+Aider lets you pair program with LLMs to start a new project or build on your existing codebase. 
+</p>
 
-```
-$ pip install aider-chat
-$ export OPENAI_API_KEY=your-key-goes-here
-$ aider hello.js
+<p align="center">
+  <img
+    src="https://aider.chat/assets/screencast.svg"
+    alt="aider screencast"
+  >
+</p>
 
-Using git repo: .git
-Added hello.js to the chat.
-
-hello.js> write a js script that prints hello world
-```
-
-## Example chat transcripts
-
-Here are some example transcripts that show how you can chat with `aider` to write and edit code with GPT-4.
-
-* [**Hello World Flask App**](https://aider.chat/examples/hello-world-flask.html): Start from scratch and have GPT create a simple Flask app with various endpoints, such as adding two numbers and calculating the Fibonacci sequence.
-
-* [**Javascript Game Modification**](https://aider.chat/examples/2048-game.html): Dive into an existing open-source repo, and get GPT's help to understand it and make modifications.
-
-* [**Complex Multi-file Change with Debugging**](https://aider.chat/examples/complex-change.html): GPT makes a complex code change that is coordinated across multiple source files, and resolves bugs by reviewing error output and doc snippets.
-
-* [**Create a Black Box Test Case**](https://aider.chat/examples/add-test.html): GPT creates a "black box" test case without access to the source of the method being tested, using only a
-[high level map of the repository based on ctags](https://aider.chat/docs/ctags.html).
-
-You can find more chat transcripts on the [examples page](https://aider.chat/examples/).
+<p align="center">
+<!--[[[cog
+from scripts.homepage import get_badges_md
+text = get_badges_md()
+cog.out(text)
+]]]-->
+  <a href="https://github.com/Aider-AI/aider/stargazers"><img alt="GitHub Stars" title="Total number of GitHub stars the Aider project has received"
+src="https://img.shields.io/github/stars/Aider-AI/aider?style=flat-square&logo=github&color=f1c40f&labelColor=555555"/></a>
+  <a href="https://pypi.org/project/aider-chat/"><img alt="PyPI Downloads" title="Total number of installations via pip from PyPI"
+src="https://img.shields.io/badge/📦%20Installs-4.1M-2ecc71?style=flat-square&labelColor=555555"/></a>
+  <img alt="Tokens per week" title="Number of tokens processed weekly by Aider users"
+src="https://img.shields.io/badge/📈%20Tokens%2Fweek-15B-3498db?style=flat-square&labelColor=555555"/>
+  <a href="https://openrouter.ai/#options-menu"><img alt="OpenRouter Ranking" title="Aider's ranking among applications on the OpenRouter platform"
+src="https://img.shields.io/badge/🏆%20OpenRouter-Top%2020-9b59b6?style=flat-square&labelColor=555555"/></a>
+  <a href="https://aider.chat/HISTORY.html"><img alt="Singularity" title="Percentage of the new code in Aider's last release written by Aider itself"
+src="https://img.shields.io/badge/🔄%20Singularity-88%25-e74c3c?style=flat-square&labelColor=555555"/></a>
+<!--[[[end]]]-->  
+</p>
 
 ## Features
 
-* Chat with GPT about your code by launching `aider` from the command line with set of source files to discuss and edit together. Aider lets GPT see and edit the content of those files.
-* GPT can write and edit code in most popular languages: python, javascript, typescript, html, css, etc.
-* Request new features, changes, improvements, or bug fixes to your code. Ask for new test cases, updated documentation or code refactors.
-* Aider will apply the edits suggested by GPT directly to your source files.
-* Aider will [automatically commit each changeset to your local git repo](https://aider.chat/docs/faq.html#how-does-aider-use-git) with a descriptive commit message. These frequent, automatic commits provide a safety net. It's easy to undo changes or use standard git workflows to manage longer sequences of changes.
-* You can use aider with multiple source files at once, so GPT can make coordinated code changes across all of them in a single changeset/commit.
-* Aider can [give *GPT-4* a map of your entire git repo](https://aider.chat/docs/ctags.html), which helps it understand and modify large codebases.
-* You can also edit files by hand using your editor while chatting with aider. Aider will notice these out-of-band edits and keep GPT up to date with the latest versions of your files. This lets you bounce back and forth between the aider chat and your editor, to collaboratively code with GPT.
+### [Cloud and local LLMs](https://aider.chat/docs/llms.html)
 
+<a href="https://aider.chat/docs/llms.html"><img src="https://aider.chat/assets/icons/brain.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Aider works best with Claude 3.7 Sonnet, DeepSeek R1 & Chat V3, OpenAI o1, o3-mini & GPT-4o, but can connect to almost any LLM, including local models.
 
-## Usage
+<br>
 
-Run the `aider` tool by executing the following command:
+### [Maps your codebase](https://aider.chat/docs/repomap.html)
 
+<a href="https://aider.chat/docs/repomap.html"><img src="https://aider.chat/assets/icons/map-outline.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Aider makes a map of your entire codebase, which helps it work well in larger projects.
+
+<br>
+
+### [100+ code languages](https://aider.chat/docs/languages.html)
+
+<a href="https://aider.chat/docs/languages.html"><img src="https://aider.chat/assets/icons/code-tags.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Aider works with most popular programming languages: python, javascript, rust, ruby, go, cpp, php, html, css, and dozens more.
+
+<br>
+
+### [Git integration](https://aider.chat/docs/git.html)
+
+<a href="https://aider.chat/docs/git.html"><img src="https://aider.chat/assets/icons/source-branch.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Aider automatically commits changes with sensible commit messages. Use familiar git tools to easily diff, manage and undo AI changes.
+
+<br>
+
+### [Use in your IDE](https://aider.chat/docs/usage/watch.html)
+
+<a href="https://aider.chat/docs/usage/watch.html"><img src="https://aider.chat/assets/icons/monitor.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Use aider from within your favorite IDE or editor. Ask for changes by adding comments to your code and aider will get to work.
+
+<br>
+
+### [Images & web pages](https://aider.chat/docs/usage/images-urls.html)
+
+<a href="https://aider.chat/docs/usage/images-urls.html"><img src="https://aider.chat/assets/icons/image-multiple.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Add images and web pages to the chat to provide visual context, screenshots, reference docs, etc.
+
+<br>
+
+### [Voice-to-code](https://aider.chat/docs/usage/voice.html)
+
+<a href="https://aider.chat/docs/usage/voice.html"><img src="https://aider.chat/assets/icons/microphone.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Speak with aider about your code! Request new features, test cases or bug fixes using your voice and let aider implement the changes.
+
+<br>
+
+### [Linting & testing](https://aider.chat/docs/usage/lint-test.html)
+
+<a href="https://aider.chat/docs/usage/lint-test.html"><img src="https://aider.chat/assets/icons/check-all.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Automatically lint and test your code every time aider makes changes. Aider can fix problems detected by your linters and test suites.
+
+<br>
+
+### [Copy/paste to web chat](https://aider.chat/docs/usage/copypaste.html)
+
+<a href="https://aider.chat/docs/usage/copypaste.html"><img src="https://aider.chat/assets/icons/content-copy.svg" width="32" height="32" align="left" valign="middle" style="margin-right:10px"></a>
+Work with any LLM via its web chat interface. Aider streamlines copy/pasting code context and edits back and forth with a browser.
+
+## Getting Started
+
+```bash
+python -m pip install aider-install
+aider-install
+
+# Change directory into your codebase
+cd /to/your/project
+
+# DeepSeek
+aider --model deepseek --api-key deepseek=<key>
+
+# Claude 3.7 Sonnet
+aider --model sonnet --api-key anthropic=<key>
+
+# o3-mini
+aider --model o3-mini --api-key openai=<key>
 ```
-aider <file1> <file2> ...
-```
 
-If your pip install did not place the `aider` executable on your path, you can invoke aider like this:
+See the [installation instructions](https://aider.chat/docs/install.html) and [usage documentation](https://aider.chat/docs/usage.html) for more details.
 
-```
-python -m aider.main <file1> <file2>
-```
+## More Information
 
-Replace `<file1>`, `<file2>`, etc., with the paths to the source code files you want to work on.
-These files will be "added to the chat session", so that GPT can see their contents and edit them according to your instructions.
+### Documentation
+- [Installation Guide](https://aider.chat/docs/install.html)
+- [Usage Guide](https://aider.chat/docs/usage.html)
+- [Tutorial Videos](https://aider.chat/docs/usage/tutorials.html)
+- [Connecting to LLMs](https://aider.chat/docs/llms.html)
+- [Configuration Options](https://aider.chat/docs/config.html)
+- [Troubleshooting](https://aider.chat/docs/troubleshooting.html)
+- [FAQ](https://aider.chat/docs/faq.html)
 
-You can also just launch `aider` anywhere in a git repo without naming
-files on the command line.  It will discover all the files in the
-repo.  You can then add and remove individual files in the chat
-session with the `/add` and `/drop` chat commands described below.
-If you or GPT mention one of the repo's filenames in the conversation,
-aider will ask if you'd like to add it to the chat.
+### Community & Resources
+- [LLM Leaderboards](https://aider.chat/docs/leaderboards/)
+- [GitHub Repository](https://github.com/Aider-AI/aider)
+- [Discord Community](https://discord.gg/Y7X7bhMQFV)
+- [Release notes](https://aider.chat/HISTORY.html)
+- [Blog](https://aider.chat/blog/)
 
-Aider will work best if you think about which files need to be edited to make your change and add them to the chat.
-Aider has some ability to help GPT figure out which files to edit all by itself, but the most effective approach is to explicitly add the needed files to the chat yourself.
+## Kind Words From Users
 
-Aider also has many
-additional command-line options, environment variables or configuration file
-to set many options. See `aider --help` for details.
-
-
-## In-chat commands
-
-Aider supports commands from within the chat, which all start with `/`. Here are some of the most useful in-chat commands:
-
-* `/add <file>`: Add matching files to the chat session.
-* `/drop <file>`: Remove matching files from the chat session.
-* `/undo`: Undo the last git commit if it was done by aider.
-* `/diff`: Display the diff of the last aider commit.
-* `/run <command>`: Run a shell command and optionally add the output to the chat.
-* `/voice`: Speak to aider to [request code changes with your voice](https://aider.chat/docs/voice.html).
-* `/help`: Show help about all commands.
-
-See the [full command docs](https://aider.chat/docs/commands.html) for more information.
-
-
-## Tips
-
-* Think about which files need to be edited to make your change and add them to the chat.
-Aider has some ability to help GPT figure out which files to edit all by itself, but the most effective approach is to explicitly add the needed files to the chat yourself.
-* Large changes are best performed as a sequence of thoughtful bite sized steps, where you plan out the approach and overall design. Walk GPT through changes like you might with a junior dev. Ask for a refactor to prepare, then ask for the actual change. Spend the time to ask for code quality/structure improvements.
-* Use Control-C to safely interrupt GPT if it isn't providing a useful response. The partial response remains in the conversation, so you can refer to it when you reply to GPT with more information or direction.
-* Use the `/run` command to run tests, linters, etc and show the output to GPT so it can fix any issues.
-* Use Meta-ENTER (Esc+ENTER in some environments) to enter multiline chat messages. Or enter `{` alone on the first line to start a multiline message and `}` alone on the last line to end it.
-* If your code is throwing an error, share the error output with GPT using `/run` or by pasting it into the chat. Let GPT figure out and fix the bug.
-* GPT knows about a lot of standard tools and libraries, but may get some of the fine details wrong about APIs and function arguments. You can paste doc snippets into the chat to resolve these issues.
-* [Aider will notice if you launch it on a git repo with uncommitted changes and offer to commit them before proceeding](https://aider.chat/docs/faq.html#how-does-aider-use-git).
-* GPT can only see the content of the files you specifically "add to the chat". Aider also sends GPT-4 a [map of your entire git repo](https://aider.chat/docs/ctags.html). So GPT may ask to see additional files if it feels that's needed for your requests.
-* I also shared some general [GPT coding tips on Hacker News](https://news.ycombinator.com/item?id=36211879).
-
-
-## GPT-4 vs GPT-3.5
-
-Aider supports all of OpenAI's chat models.
-You can choose a model with the `--model` command line argument.
-
-You should probably use GPT-4 if you can. For more details see the
-[FAQ entry that compares GPT-4 vs GPT-3.5](https://aider.chat/docs/faq.html#gpt-4-vs-gpt-35).
-
-For a discussion of using other non-OpenAI models, see the
-[FAQ about other LLMs](https://aider.chat/docs/faq.html#can-i-use-aider-with-other-llms-local-llms-etc).
-
-## Installation
-
-See the [installation instructions](https://aider.chat/docs/install.html).
-
-## FAQ
-
-For more information, see the [FAQ](https://aider.chat/docs/faq.html).
-
-## Kind words from users
+- *"My life has changed... Aider... It's going to rock your world."* — [Eric S. Raymond on X](https://x.com/esrtweet/status/1910809356381413593)
+- *"The best free open source AI coding assistant."* — [IndyDevDan on YouTube](https://youtu.be/YALpX8oOn78)
+- *"The best AI coding assistant so far."* — [Matthew Berman on YouTube](https://www.youtube.com/watch?v=df8afeb1FY8)
+- *"Aider ... has easily quadrupled my coding productivity."* — [SOLAR_FIELDS on Hacker News](https://news.ycombinator.com/item?id=36212100)
+- *"It's a cool workflow... Aider's ergonomics are perfect for me."* — [qup on Hacker News](https://news.ycombinator.com/item?id=38185326)
+- *"It's really like having your senior developer live right in your Git repo - truly amazing!"* — [rappster on GitHub](https://github.com/Aider-AI/aider/issues/124)
+- *"What an amazing tool. It's incredible."* — [valyagolev on GitHub](https://github.com/Aider-AI/aider/issues/6#issue-1722897858)
+- *"Aider is such an astounding thing!"* — [cgrothaus on GitHub](https://github.com/Aider-AI/aider/issues/82#issuecomment-1631876700)
+- *"It was WAY faster than I would be getting off the ground and making the first few working versions."* — [Daniel Feldman on X](https://twitter.com/d_feldman/status/1662295077387923456)
+- *"THANK YOU for Aider! It really feels like a glimpse into the future of coding."* — [derwiki on Hacker News](https://news.ycombinator.com/item?id=38205643)
+- *"It's just amazing. It is freeing me to do things I felt were out my comfort zone before."* — [Dougie on Discord](https://discord.com/channels/1131200896827654144/1174002618058678323/1174084556257775656)
+- *"This project is stellar."* — [funkytaco on GitHub](https://github.com/Aider-AI/aider/issues/112#issuecomment-1637429008)
+- *"Amazing project, definitely the best AI coding assistant I've used."* — [joshuavial on GitHub](https://github.com/Aider-AI/aider/issues/84)
+- *"I absolutely love using Aider ... It makes software development feel so much lighter as an experience."* — [principalideal0 on Discord](https://discord.com/channels/1131200896827654144/1133421607499595858/1229689636012691468)
+- *"I have been recovering from ... surgeries ... aider ... has allowed me to continue productivity."* — [codeninja on Reddit](https://www.reddit.com/r/OpenAI/s/nmNwkHy1zG)
+- *"I am an aider addict. I'm getting so much more work done, but in less time."* — [dandandan on Discord](https://discord.com/channels/1131200896827654144/1131200896827654149/1135913253483069470)
+- *"Aider... blows everything else out of the water hands down, there's no competition whatsoever."* — [SystemSculpt on Discord](https://discord.com/channels/1131200896827654144/1131200896827654149/1178736602797846548)
+- *"Aider is amazing, coupled with Sonnet 3.5 it's quite mind blowing."* — [Josh Dingus on Discord](https://discord.com/channels/1131200896827654144/1133060684540813372/1262374225298198548)
+- *"Hands down, this is the best AI coding assistant tool so far."* — [IndyDevDan on YouTube](https://www.youtube.com/watch?v=MPYFPvxfGZs)
+- *"[Aider] changed my daily coding workflows. It's mind-blowing how ...(it)... can change your life."* — [maledorak on Discord](https://discord.com/channels/1131200896827654144/1131200896827654149/1258453375620747264)
+- *"Best agent for actual dev work in existing codebases."* — [Nick Dobos on X](https://twitter.com/NickADobos/status/1690408967963652097?s=20)
+- *"One of my favorite pieces of software. Blazing trails on new paradigms!"* — [Chris Wall on X](https://x.com/chris65536/status/1905053299251798432)
+- *"Aider has been revolutionary for me and my work."* — [Starry Hope on X](https://x.com/starryhopeblog/status/1904985812137132056)
+- *"Try aider! One of the best ways to vibe code."* — [Chris Wall on X](https://x.com/Chris65536/status/1905053418961391929)
+- *"Freaking love Aider."* — [hztar on Hacker News](https://news.ycombinator.com/item?id=44035015)
+- *"Aider is hands down the best. And it's free and opensource."* — [AriyaSavakaLurker on Reddit](https://www.reddit.com/r/ChatGPTCoding/comments/1ik16y6/whats_your_take_on_aider/mbip39n/)
+- *"Aider is also my best friend."* — [jzn21 on Reddit](https://www.reddit.com/r/ChatGPTCoding/comments/1heuvuo/aider_vs_cline_vs_windsurf_vs_cursor/m27dcnb/)
+- *"Try Aider, it's worth it."* — [jorgejhms on Reddit](https://www.reddit.com/r/ChatGPTCoding/comments/1heuvuo/aider_vs_cline_vs_windsurf_vs_cursor/m27cp99/)
+- *"I like aider :)"* — [Chenwei Cui on X](https://x.com/ccui42/status/1904965344999145698)
+- *"Aider is the precision tool of LLM code gen... Minimal, thoughtful and capable of surgical changes ... while keeping the developer in control."* — [Reilly Sweetland on X](https://x.com/rsweetland/status/1904963807237259586)
+- *"Cannot believe aider vibe coded a 650 LOC feature across service and cli today in 1 shot."* - [autopoietist on Discord](https://discord.com/channels/1131200896827654144/1131200896827654149/1355675042259796101)
+- *"Oh no the secret is out! Yes, Aider is the best coding tool around. I highly, highly recommend it to anyone."* — [Joshua D Vander Hook on X](https://x.com/jodavaho/status/1911154899057795218)
+- *"thanks to aider, i have started and finished three personal projects within the last two days"* — [joseph stalzyn on X](https://x.com/anitaheeder/status/1908338609645904160)
+- *"Been using aider as my daily driver for over a year ... I absolutely love the tool, like beyond words."* — [koleok on Discord](https://discord.com/channels/1131200896827654144/1273248471394291754/1356727448372252783)
+- *"Aider ... is the tool to benchmark against."* — [BeetleB on Hacker News](https://news.ycombinator.com/item?id=43930201)
+- *"aider is really cool"* — [kache on X](https://x.com/yacineMTB/status/1911224442430124387)
 
 * *The best AI coding assistant so far.* -- [Matthew Berman](https://www.youtube.com/watch?v=df8afeb1FY8)
 * *Hands down, this is the best AI coding assistant tool so far.* -- [IndyDevDan](https://www.youtube.com/watch?v=MPYFPvxfGZs)
